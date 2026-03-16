@@ -1,0 +1,5 @@
+node_modules/
+.env
+bin/stats
+bin/ram_stats
+.DS_Store

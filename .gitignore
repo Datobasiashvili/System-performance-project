@@ -1,0 +1,13 @@
+# Server ignores
+server/node_modules/
+server/.env
+server/bin/stats
+server/bin/ram_stats
+
+# Client ignores
+client/node_modules/
+client/dist/
+client/.env
+
+# General
+.DS_Store
