@@ -5,23 +5,26 @@ using namespace std;
 
 int main(){
     ifstream memFile("/proc/meminfo");
-    string label;
+    string label, unit;
     long totalMem, freeMem, availMem, active, dirty;
 
     while (memFile >> label){
         if (label == "MemTotal:"){
-            memFile >> totalMem;
+            memFile >> totalMem >> unit;
         } else if (label == "MemAvailable:"){
-            memFile >> availMem;
+            memFile >> availMem >> unit;
         } else if (label == "Active:"){
-            memFile >> active;
+            memFile >> active >> unit;
         } else if (label == "Dirty:"){
-            memFile >> dirty;
+            memFile >> dirty >> unit;
             break;
+        } else {
+            string dummy;
+            getline(memFile, dummy);
         }
     }
 
-    double usedPercent = ((double)(totalMem - availMem) / totalMem) * 100;
+    double usedPercent = (totalMem > 0) ? ((double)(totalMem - availMem) / totalMem) * 100 : 0;
 
     cout << "{" 
      << "\"total\":" << totalMem  << ","

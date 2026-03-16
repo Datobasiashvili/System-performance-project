@@ -3,11 +3,10 @@ const path = require("path");
 
 const binaryPath = path.join(__dirname, '..', 'bin', 'ram_stats');
 
+let lastKnownRamStats = { total: 0, avalaible: 0, percent: 0, active: 0, dirty: 0 };
+
 exports.getRamStats = (req, res) => {
-    execFile(binaryPath, (error, stdout) => {
-        if (error) return res.status(500).json({ error: error.message });
-        res.json(JSON.parse(stdout));
-    });
+    res.json(lastKnownRamStats);
 };
 
 exports.emitRamStats = (io) => {
@@ -16,10 +15,11 @@ exports.emitRamStats = (io) => {
             console.error(`C++ Engine Error: ${error.message}`);
             return;
         }
-        
         try {
             const stats = JSON.parse(stdout);
-            io.emit('ramUpdate', stats);
+            lastKnownRamStats = stats;
+
+            io.emit('ramUpdate', lastKnownRamStats);
         } catch (parseError) {
             console.error("JSON Parse Error:", parseError);
         }
